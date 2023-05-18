@@ -25,24 +25,24 @@ public class EventControllerIT {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Test
 	public void updateShouldUpdateResourceWhenIdExists() throws Exception {
 
 		long existingId = 1L;
-		
+
 		EventDTO dto = new EventDTO(null, "Expo XP", LocalDate.of(2021, 5, 18), "https://expoxp.com.br", 7L);
 		String jsonBody = objectMapper.writeValueAsString(dto);
-		
+
 		ResultActions result =
 				mockMvc.perform(put("/events/{id}", existingId)
 					.content(jsonBody)
 					.contentType(MediaType.APPLICATION_JSON)
 					.accept(MediaType.APPLICATION_JSON));
-		
+
 		result.andExpect(status().isOk());
 		result.andExpect(jsonPath("$.id").exists());
 		result.andExpect(jsonPath("$.id").value(1L));		
@@ -56,16 +56,16 @@ public class EventControllerIT {
 	public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
 
 		long nonExistingId = 1000L;
-		
+
 		EventDTO dto = new EventDTO(null, "Expo XP", LocalDate.of(2021, 5, 18), "https://expoxp.com.br", 7L);
 		String jsonBody = objectMapper.writeValueAsString(dto);
-		
+
 		ResultActions result =
 				mockMvc.perform(put("/events/{id}", nonExistingId)
 					.content(jsonBody)
 					.contentType(MediaType.APPLICATION_JSON)
 					.accept(MediaType.APPLICATION_JSON));
-		
+
 		result.andExpect(status().isNotFound());
 	}
 }
